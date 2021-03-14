@@ -55,32 +55,30 @@ int main(int argc, const char **argv)
             osm_data = std::move(*data);
     }
 
-    // TODO 1: Declare floats `start_x`, `start_y`, `end_x`, and `end_y` and get
-    // user input for these values using std::cin. Pass the user input to the
-    // RoutePlanner object below in place of 10, 10, 90, 90.
-
+    // Declare user coordinates variables
     float start_x = 0.0;
     float start_y = 0.0;
     float end_x = 0.0;
     float end_y = 0.0;
 
-    std::cout << "Choose a start coordinate.\n  start_x:";
+    // Get coordinates from User.
+    std::cout << "\nChoose a start coordinate (values between 0 and 100).\n  start_x:";
     std::cin >> start_x;
-    std::cout << "\n  start_y:";
+    std::cout << "  start_y:";
     std::cin >> start_y;
 
-    std::cout << "Choose an end coordinate.\n  end_x:";
+    std::cout << "\nChoose an end coordinate (values between 0 and 100).\n  end_x:";
     std::cin >> end_x;
-    std::cout << "\n  end_y:";
+    std::cout << "  end_y:";
     std::cin >> end_y;
-
-    std::cout << "(" << start_x << ":" << start_y << ") to (" << end_x << ":" << end_y << ")" <<std::endl;
+    
     // Build Model.
     RouteModel model{osm_data};
 
     // Create RoutePlanner object and perform A* search.
     RoutePlanner route_planner{model, start_x, start_y, end_x, end_y};
 
+    // Perform A* search
     route_planner.AStarSearch();
 
     std::cout << "Distance: " << route_planner.GetDistance() << " meters. \n";
