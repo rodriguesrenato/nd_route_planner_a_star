@@ -7,6 +7,8 @@
 #include "route_model.h"
 #include "render.h"
 #include "route_planner.h"
+#include <ios>
+#include <limits>
 
 using namespace std::experimental;
 
@@ -55,23 +57,47 @@ int main(int argc, const char **argv)
             osm_data = std::move(*data);
     }
 
-    // Declare user coordinates variables
-    float start_x = 0.0;
-    float start_y = 0.0;
-    float end_x = 0.0;
-    float end_y = 0.0;
+    // Declare start and goal variables
+    float start_x, start_y, end_x, end_y;
 
-    // Get coordinates from User.
-    std::cout << "\nChoose a start coordinate (values between 0 and 100).\n  start_x:";
+    // Limit variables between 0 and 100
+    std::cout << "Enter a start_x from 0 to 100: ";
     std::cin >> start_x;
-    std::cout << "  start_y:";
+    while (!(std::cin) || start_x < 0 || start_x > 100)
+    {
+        std::cout << "Invalid entry. Enter a start_x from 0 to 100: ";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin >> start_x;
+    }
+    std::cout << "Enter a start_y from 0 to 100: ";
     std::cin >> start_y;
-
-    std::cout << "\nChoose an end coordinate (values between 0 and 100).\n  end_x:";
+    while (!(std::cin) || start_y < 0 || start_y > 100)
+    {
+        std::cout << "Invalid entry. Enter a start_y from 0 to 100: ";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin >> start_y;
+    }
+    std::cout << "Enter a end_x from 0 to 100: ";
     std::cin >> end_x;
-    std::cout << "  end_y:";
+    while (!(std::cin) || end_x < 0 || end_x > 100)
+    {
+        std::cout << "Invalid entry. Enter a end_x from 0 to 100: ";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin >> end_x;
+    }
+    std::cout << "Enter a end_y from 0 to 100: ";
     std::cin >> end_y;
-    
+    while (!(std::cin) || end_y < 0 || end_y > 100)
+    {
+        std::cout << "Invalid entry. Enter a end_y from 0 to 100: ";
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        std::cin >> end_y;
+    }
+
     // Build Model.
     RouteModel model{osm_data};
 
