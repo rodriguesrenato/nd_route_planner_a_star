@@ -12,12 +12,10 @@ RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, floa
 
     start_node = &m_Model.FindClosestNode(start_x, start_y);
     end_node = &m_Model.FindClosestNode(end_x, end_y);
-    start_node->g_value = 0;
-    start_node->h_value = CalculateHValue(start_node);
-    end_node->h_value = 0;
 
-    std::cout << "start_node: " << start_node->x << "," << start_node->y << "\t| user start: " << start_x << "," << start_y << std::endl;
-    std::cout << "end_node: " << end_node->x << "," << end_node->y << "\t| user end: " << end_x << "," << end_y << std::endl;
+    // Debug nodes values
+    std::cout << "\n Closest start_node: " << start_node->x << "," << start_node->y << "\t| user input start: " << start_x << "," << start_y << std::endl;
+    std::cout << "Closest end_node: " << end_node->x << "," << end_node->y << "\t| user input end: " << end_x << "," << end_y << std::endl;
 }
 
 // Calculate the distance from the given node to the end_node
@@ -31,19 +29,14 @@ float RoutePlanner::CalculateHValue(const RouteModel::Node *node)
 // calculate g and h, mark as visited and at last, added it in open_list.
 void RoutePlanner::AddNeighbors(RouteModel::Node *current_node)
 {
-    cout << "\ncurrent_node: " << current_node->x << "," << current_node->y << std::endl;
     current_node->FindNeighbors();
     for (RouteModel::Node *n : current_node->neighbors)
     {
-        // cout << "    neighbor_node: " << n->x << "," << n->y << std::endl;
-        // if (!n->visited)
-        // {
-            n->parent = current_node;
-            n->h_value = CalculateHValue(n);
-            n->g_value += current_node->g_value + current_node->distance(*n);
-            n->visited = true;
-            open_list.push_back(n);
-        // }
+        n->parent = current_node;
+        n->h_value = CalculateHValue(n);
+        n->g_value += current_node->g_value + current_node->distance(*n);
+        n->visited = true;
+        open_list.push_back(n);
     }
 }
 
@@ -62,7 +55,7 @@ RouteModel::Node *RoutePlanner::NextNode()
     return next_node;
 }
 
-// Construct the path from end_node to start_node by creating a vector following node's parent attribute  
+// Construct the path from end_node to start_node by creating a vector following node's parent attribute
 std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node *current_node)
 {
     // Create path_found vector
@@ -97,8 +90,8 @@ void RoutePlanner::AStarSearch()
     start_node->visited = true;
     open_list.push_back(current_node);
 
-    // Iterate over the lowest g+h value of the nodes in open_list, 
-    // check if it's the end node to construct the final path, 
+    // Iterate over the lowest g+h value of the nodes in open_list,
+    // check if it's the end node to construct the final path,
     // otherwise add it's neighbors to the open_list
     do
     {
