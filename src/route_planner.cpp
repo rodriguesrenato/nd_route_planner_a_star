@@ -62,12 +62,15 @@ RouteModel::Node *RoutePlanner::NextNode()
     return next_node;
 }
 
+// Construct the path from end_node to start_node by creating a vector following node's parent attribute  
 std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node *current_node)
 {
     // Create path_found vector
     distance = 0.0f;
     std::vector<RouteModel::Node> path_found;
 
+    // Sum up the distance of the current node to its parent node
+    // Add current node the the path vector and set it's parent as the current node for next loop iteration.
     while (current_node != start_node)
     {
         distance += current_node->distance(*current_node->parent);
@@ -86,11 +89,17 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
     return path_found;
 }
 
+// Perform an A* Search to find the path between start_node and end_node
 void RoutePlanner::AStarSearch()
 {
+    // Mark start_node as current_node, add it to open_list and mark it as visited
     RouteModel::Node *current_node = start_node;
     start_node->visited = true;
     open_list.push_back(current_node);
+
+    // Iterate over the lowest g+h value of the nodes in open_list, 
+    // check if it's the end node to construct the final path, 
+    // otherwise add it's neighbors to the open_list
     do
     {
         current_node = NextNode();
@@ -103,6 +112,7 @@ void RoutePlanner::AStarSearch()
         AddNeighbors(current_node);
     } while (open_list.size() > 0);
 
+    // If open_list gets empty before fine the end_node, the final path couldn't be found
     std::cout << "\nCan't find a path!" << std::endl;
     m_Model.path = std::vector<RouteModel::Node>{};
 }
